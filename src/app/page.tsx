@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import axios from 'axios'
+import Link from 'next/link'
 
 interface School {
   city: string
@@ -67,7 +68,13 @@ const Home: React.FC = () => {
               </h2>
               <div className='flex-grow'></div>
               <p className='text-sm mb-2'>{school.city}</p>
-              <p className='text-sm'>{school.instituteCode}</p>
+              <Link
+                key={school.instituteCode}
+                href={`https://${school.instituteCode}.e-kreta.hu`}
+                target='_blank'
+              >
+                <p className='text-sm underline'>{school.instituteCode}</p>
+              </Link>
             </div>
           ))}
         </div>
