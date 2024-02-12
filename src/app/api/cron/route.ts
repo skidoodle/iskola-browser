@@ -36,14 +36,13 @@ export async function GET(request: NextRequest) {
     if (!getResponse.ok) {
       throw new Error(`Error fetching new data. Status: ${getResponse.status}`)
     }
-
     return Response.json({ message: 'Cache deleted and new data fetched' })
   } catch (error) {
-    return (
-      Response.json({
+    return Response.json(
+      {
         error: 'Error handling request',
         message: error,
-      }),
+      },
       {
         status: 500,
       }
