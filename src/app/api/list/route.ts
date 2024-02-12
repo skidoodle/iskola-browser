@@ -43,7 +43,10 @@ export async function GET(_req: Request, _res: Response) {
 
     return Response.json(parsedData)
   } catch (error) {
-    return Response.json({ error: 'Error handling request', message: error })
+    return Response.json(
+      { error: 'Error handling request', message: error },
+      { status: 500 }
+    )
   }
 }
 
@@ -59,6 +62,9 @@ export async function DELETE(_req: Request, _res: Response) {
     await fs.unlink(CACHE_FILE_PATH)
     return Response.json({ message: 'Cache deleted' })
   } catch (error) {
-    return Response.json({ error: 'Error handling request', message: error })
+    return Response.json(
+      { error: 'Error handling request', message: error },
+      { status: 500 }
+    )
   }
 }

@@ -1,49 +1,33 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
-import axios from 'axios'
+import { useState, useMemo } from 'react'
+import useSWR from 'swr'
 import Link from 'next/link'
 
 interface School {
-  city: string
+  instituteId: number
   instituteCode: string
   name: string
+  city: string
 }
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 const Home: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('')
-  const [schools, setSchools] = useState<School[]>([])
-  const [filteredSchools, setFilteredSchools] = useState<School[]>([])
+  const { data: schools } = useSWR<School[]>('/instituteList.json', fetcher)
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get<School[]>(
-          'https://api.refilc.hu/v1/public/school-list'
-        )
-        setSchools(response.data)
-      } catch (error) {
-        console.error('Error fetching school data:', error)
-      }
-    }
+  const filteredSchools = useMemo(() => {
+    if (!schools) return []
 
-    void fetchData()
-  }, [])
-
-  useEffect(() => {
-    const filtered = schools.filter(
+    return schools.filter(
       (school) =>
         school.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         school.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        school.instituteCode.toLowerCase().includes(searchTerm.toLowerCase())
+        school.instituteCode.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        school.instituteId.toString().includes(searchTerm)
     )
-    setFilteredSchools(filtered)
   }, [searchTerm, schools])
-
-  const memoizedFilteredSchools = useMemo(
-    () => filteredSchools,
-    [filteredSchools]
-  )
 
   return (
     <>
@@ -58,7 +42,7 @@ const Home: React.FC = () => {
           />
         </div>
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-          {memoizedFilteredSchools.map((school) => (
+          {filteredSchools.map((school) => (
             <div
               key={school.instituteCode}
               className='p-4 border rounded shadow-md relative transition duration-300 transform hover:scale-105 flex flex-col h-full'
@@ -68,6 +52,7 @@ const Home: React.FC = () => {
               </h2>
               <div className='flex-grow'></div>
               <p className='text-sm mb-2'>{school.city}</p>
+              <p className='text-sm mb-2'>{school.instituteId}</p>
               <Link
                 key={school.instituteCode}
                 href={`https://${school.instituteCode}.e-kreta.hu`}

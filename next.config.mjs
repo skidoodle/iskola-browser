@@ -41,15 +41,16 @@ const nextConfig = {
         source: '/:path*',
         headers: securityHeaders,
       },
-    ]
-  },
-  images: {
-    remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'i.scdn.co',
+        source: '/instituteList.json',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=3600',
+          },
+        ],
       },
-    ],
+    ]
   },
   reactStrictMode: true,
   swcMinify: true,
