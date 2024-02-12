@@ -13,6 +13,7 @@ import { useState, useMemo } from 'react'
 import useSWR from 'swr'
 import Link from 'next/link'
 import { SearchIcon } from '@/components/SearchIcon'
+
 interface School {
   instituteCode: string
   name: string
