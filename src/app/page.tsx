@@ -1,14 +1,26 @@
 'use client'
 
+import React, { useEffect } from 'react'
+import {
+  Pagination,
+  Spinner,
+  Input,
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Divider,
+  Image,
+} from '@nextui-org/react'
 import { useState, useMemo } from 'react'
 import useSWR from 'swr'
 import Link from 'next/link'
-
+import { SearchIcon } from '@/components/SearchIcon'
 interface School {
-  instituteId: number
   instituteCode: string
   name: string
   city: string
+  url: string
 }
 
 const fetcher = (url: string) =>
@@ -18,17 +30,11 @@ const fetcher = (url: string) =>
     },
   }).then((res) => res.json())
 
-const LoadingSpinner: React.FC = () => {
-  return (
-    <div className='flex items-center justify-center h-screen'>
-      <div className='animate-spin rounded-full border-t-4 border-blue-500 border-solid border-opacity-50 h-12 w-12'></div>
-    </div>
-  )
-}
-
-const Home: React.FC = () => {
+export default function Home() {
   const [searchTerm, setSearchTerm] = useState<string>('')
-  const { data: schools } = useSWR<School[]>('/api/list', fetcher)
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const itemsPerPage = 12
+  const { data: schools, isValidating } = useSWR<School[]>('/api/list', fetcher)
 
   const filteredSchools = useMemo(() => {
     if (!schools) return []
@@ -37,52 +43,102 @@ const Home: React.FC = () => {
       (school) =>
         school.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         school.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        school.instituteCode.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        school.instituteId.toString().includes(searchTerm)
+        school.instituteCode.toLowerCase().includes(searchTerm.toLowerCase())
     )
   }, [searchTerm, schools])
 
-  if (!schools) {
-    return <LoadingSpinner />
-  }
+  const totalItems = filteredSchools.length
+  const totalPages = Math.ceil(totalItems / itemsPerPage)
+
+  useEffect(() => {
+    if (totalPages > 0 && currentPage > totalPages) {
+      setCurrentPage(totalPages)
+    }
+  }, [totalPages, currentPage])
+
+  const indexOfLastItem = currentPage * itemsPerPage
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage
+  const currentItems = filteredSchools.slice(indexOfFirstItem, indexOfLastItem)
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
+
+  if (!schools || isValidating)
+    return (
+      <div className='flex items-center justify-center h-screen'>
+        <Spinner size='lg' />
+      </div>
+    )
 
   return (
     <>
       <div className='container mx-auto p-8 bg-gray-800 text-white'>
-        <div className='relative'>
-          <input
-            type='text'
+        {/* Search */}
+        <div className='relative mb-5'>
+          <Input
+            radius='lg'
+            classNames={{
+              label: 'text-black/50 dark:text-white/90',
+              input: [
+                'bg-transparent',
+                'text-black/90 dark:text-white/90',
+                'placeholder:text-default-700/50 dark:placeholder:text-white/60',
+              ],
+              innerWrapper: 'bg-transparent',
+              inputWrapper: [
+                'shadow-xl',
+                'bg-default-200/50',
+                'dark:bg-default/60',
+                'backdrop-blur-xl',
+                'backdrop-saturate-200',
+                'hover:bg-default-200/70',
+                'dark:hover:bg-default/70',
+                'group-data-[focused=true]:bg-default-200/50',
+                'dark:group-data-[focused=true]:bg-default/60',
+                '!cursor-text',
+              ],
+            }}
             placeholder='Iskola keresése...'
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className='p-4 pl-8 mb-10 border rounded text-white bg-gray-600 w-full outline-none font-bold'
+            startContent={
+              <SearchIcon className='text-black/50 mb-0.5 dark:text-white/90 text-slate-400 pointer-events-none flex-shrink-0' />
+            }
           />
         </div>
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-          {filteredSchools.map((school) => (
-            <div
+        {/* Card */}
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3'>
+          {currentItems.map((school) => (
+            <Card
               key={school.instituteCode}
-              className='p-4 border rounded shadow-md relative transition duration-300 transform hover:scale-105 flex flex-col h-full'
+              shadow='md'
+              className='h-[200px] w-[450px] md:w-full transition duration-300 transform hover:scale-[102%]'
             >
-              <h2 className='text-xl font-bold mb-4'>
-                {school.name.replace(/"/g, '')}
-              </h2>
-              <div className='flex-grow'></div>
-              <p className='text-sm mb-2'>{school.city}</p>
-              <p className='text-sm mb-2'>{school.instituteId}</p>
-              <Link
-                key={school.instituteCode}
-                href={`https://${school.instituteCode}.e-kreta.hu`}
-                target='_blank'
-              >
-                <p className='text-sm underline'>{school.instituteCode}</p>
-              </Link>
-            </div>
+              <CardHeader>
+                <h2 className='text-md font-bold p-2 mt-5'>{school.name}</h2>
+              </CardHeader>
+              <CardBody>
+                <p className='text-xs mb-2 fixed bottom-10'>{school.city}</p>
+                <Link href={school.url} target='_blank'>
+                  <p className='text-sm underline fixed bottom-5'>
+                    {school.instituteCode}
+                  </p>
+                </Link>
+              </CardBody>
+            </Card>
           ))}
+        </div>
+        {/* Pagination */}
+        <div className='fixed bottom-4 left-1/2 transform -translate-x-1/2 mt-4'>
+          <Pagination
+            showControls
+            total={totalPages}
+            initialPage={1}
+            page={currentPage}
+            onChange={paginate}
+            isCompact
+          />
         </div>
       </div>
     </>
   )
 }
-
-export default Home

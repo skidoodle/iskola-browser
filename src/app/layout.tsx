@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import Head from 'next/head'
+import { Providers } from './providers'
 import { Inter } from 'next/font/google'
 import './globals.css'
 
@@ -13,20 +13,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode
-}>) {
+}) {
   return (
-    <html lang='en'>
-      <Head>
-        <link
-          rel='preload'
-          href='/api/list'
-          as='fetch'
-          crossOrigin='anonymous'
-        />
-      </Head>
-      <body className={inter.className}>{children}</body>
+    <html lang='en' className='bg-gray-800 dark'>
+      <body className={inter.className}>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   )
 }
