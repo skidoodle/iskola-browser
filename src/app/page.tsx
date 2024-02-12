@@ -111,7 +111,7 @@ export default function Home() {
             <Card
               key={school.instituteCode}
               shadow='md'
-              className='p-3 h-[200px] w-[450px] md:w-full transition duration-300 transform hover:scale-[102%] bg-slate-800/40'
+              className='p-3 h-[200px] relative md:w-full lg:w-full transition duration-300 transform hover:scale-[102%] bg-slate-800/40'
             >
               <CardHeader>
                 <h2 className='text-md font-bold mt-5'>
@@ -138,6 +138,7 @@ export default function Home() {
             initialPage={1}
             page={currentPage}
             onChange={paginate}
+            size='lg'
           />
         </div>
       </div>
