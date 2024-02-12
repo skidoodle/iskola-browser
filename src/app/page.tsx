@@ -7,10 +7,7 @@ import {
   Input,
   Card,
   CardHeader,
-  CardBody,
   CardFooter,
-  Divider,
-  Image,
 } from '@nextui-org/react'
 import { useState, useMemo } from 'react'
 import useSWR from 'swr'
@@ -22,6 +19,9 @@ interface School {
   city: string
   url: string
 }
+
+const truncate = (str: string, n: number) =>
+  str.length > n ? str.slice(0, n - 1) + '...' : str
 
 const fetcher = (url: string) =>
   fetch(url, {
@@ -71,7 +71,7 @@ export default function Home() {
 
   return (
     <>
-      <div className='container mx-auto p-8 bg-gray-800 text-white'>
+      <div className='container mx-auto p-8 bg-slate-950 text-white'>
         {/* Search */}
         <div className='relative mb-5'>
           <Input
@@ -111,19 +111,21 @@ export default function Home() {
             <Card
               key={school.instituteCode}
               shadow='md'
-              className='h-[200px] w-[450px] md:w-full transition duration-300 transform hover:scale-[102%]'
+              className='p-3 h-[200px] w-[450px] md:w-full transition duration-300 transform hover:scale-[102%]'
             >
               <CardHeader>
-                <h2 className='text-md font-bold p-2 mt-5'>{school.name}</h2>
+                <h2 className='text-md font-bold mt-5'>
+                  {truncate(school.name, 140)}
+                </h2>
               </CardHeader>
-              <CardBody>
+              <CardFooter>
                 <p className='text-xs mb-2 fixed bottom-10'>{school.city}</p>
                 <Link href={school.url} target='_blank'>
                   <p className='text-sm underline fixed bottom-5'>
                     {school.instituteCode}
                   </p>
                 </Link>
-              </CardBody>
+              </CardFooter>
             </Card>
           ))}
         </div>
