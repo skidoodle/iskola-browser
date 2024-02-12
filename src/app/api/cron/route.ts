@@ -9,11 +9,7 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    const protocol = request.headers.get('x-forwarded-proto') ?? 'http'
-    const apiUrl = new URL(
-      '/api/list',
-      `${protocol}://${request.headers.get('host')}`
-    )
+    const apiUrl = new URL('/api/list', `${process.env.HOST}`)
 
     const deleteResponse = await fetch(apiUrl.href, {
       method: 'DELETE',
