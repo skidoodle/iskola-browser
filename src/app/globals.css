@@ -5,7 +5,7 @@
 @layer base {
   html {
     scrollbar-width: thin;
-    scrollbar-color: lightblue transparent;
+    scrollbar-color: transparent;
   }
 }
 

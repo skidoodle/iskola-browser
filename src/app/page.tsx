@@ -111,7 +111,7 @@ export default function Home() {
             <Card
               key={school.instituteCode}
               shadow='md'
-              className='p-3 h-[200px] w-[450px] md:w-full transition duration-300 transform hover:scale-[102%]'
+              className='p-3 h-[200px] w-[450px] md:w-full transition duration-300 transform hover:scale-[102%] bg-slate-800/40'
             >
               <CardHeader>
                 <h2 className='text-md font-bold mt-5'>
@@ -133,11 +133,11 @@ export default function Home() {
         <div className='fixed bottom-4 left-1/2 transform -translate-x-1/2 mt-4'>
           <Pagination
             showControls
+            isCompact
             total={totalPages}
             initialPage={1}
             page={currentPage}
             onChange={paginate}
-            isCompact
           />
         </div>
       </div>
