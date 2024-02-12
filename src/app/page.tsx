@@ -11,11 +11,24 @@ interface School {
   city: string
 }
 
-const fetcher = (url: string) => fetch(url).then((res) => res.json())
+const fetcher = (url: string) =>
+  fetch(url, {
+    headers: {
+      'Accept-Encoding': 'gzip, deflate, br',
+    },
+  }).then((res) => res.json())
+
+const LoadingSpinner: React.FC = () => {
+  return (
+    <div className='flex items-center justify-center h-screen'>
+      <div className='animate-spin rounded-full border-t-4 border-blue-500 border-solid border-opacity-50 h-12 w-12'></div>
+    </div>
+  )
+}
 
 const Home: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('')
-  const { data: schools } = useSWR<School[]>('/instituteList.json', fetcher)
+  const { data: schools } = useSWR<School[]>('/api/list', fetcher)
 
   const filteredSchools = useMemo(() => {
     if (!schools) return []
@@ -28,6 +41,10 @@ const Home: React.FC = () => {
         school.instituteId.toString().includes(searchTerm)
     )
   }, [searchTerm, schools])
+
+  if (!schools) {
+    return <LoadingSpinner />
+  }
 
   return (
     <>

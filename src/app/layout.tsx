@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Head from 'next/head'
 import { Inter } from 'next/font/google'
 import './globals.css'
 
@@ -17,6 +18,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
+      <Head>
+        <link
+          rel='preload'
+          href='/api/list'
+          as='fetch'
+          crossOrigin='anonymous'
+        />
+      </Head>
       <body className={inter.className}>{children}</body>
     </html>
   )
