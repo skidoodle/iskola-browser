@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import {
   Pagination,
   Spinner,
@@ -9,27 +9,13 @@ import {
   CardHeader,
   CardFooter,
 } from '@nextui-org/react'
-import { useState, useMemo } from 'react'
 import useSWR from 'swr'
 import Link from 'next/link'
 import { SearchIcon } from '@/components/SearchIcon'
-
-interface School {
-  instituteCode: string
-  name: string
-  city: string
-  url: string
-}
-
-const truncate = (str: string, n: number) =>
-  str.length > n ? str.slice(0, n - 1) + '...' : str
-
-const fetcher = (url: string) =>
-  fetch(url, {
-    headers: {
-      'Accept-Encoding': 'gzip, deflate, br',
-    },
-  }).then((res) => res.json())
+import { truncate } from '@/utils/truncate'
+import { fetcher } from '@/utils/fetcher'
+import { removeAccents } from '@/utils/normalize'
+import type { School } from '@/utils/interface'
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState<string>('')
@@ -37,19 +23,25 @@ export default function Home() {
   const itemsPerPage = 21
   const { data: schools, isValidating } = useSWR<School[]>('/api/list', fetcher)
 
+  const normalizedSearchTerm = removeAccents(searchTerm.toLowerCase())
   const filteredSchools = useMemo(() => {
     if (!schools) return []
 
     return schools.filter(
       (school) =>
-        school.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        school.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        school.instituteCode.toLowerCase().includes(searchTerm.toLowerCase())
+        removeAccents(school.name.toLowerCase()).includes(
+          normalizedSearchTerm
+        ) ||
+        removeAccents(school.city.toLowerCase()).includes(
+          normalizedSearchTerm
+        ) ||
+        removeAccents(school.instituteCode.toLowerCase()).includes(
+          normalizedSearchTerm
+        )
     )
-  }, [searchTerm, schools])
+  }, [normalizedSearchTerm, schools])
 
-  const totalItems = filteredSchools.length
-  const totalPages = Math.ceil(totalItems / itemsPerPage)
+  const totalPages = Math.ceil(filteredSchools.length / itemsPerPage)
 
   useEffect(() => {
     if (totalPages > 0 && currentPage > totalPages) {
@@ -57,9 +49,10 @@ export default function Home() {
     }
   }, [totalPages, currentPage])
 
-  const indexOfLastItem = currentPage * itemsPerPage
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage
-  const currentItems = filteredSchools.slice(indexOfFirstItem, indexOfLastItem)
+  const currentItems = filteredSchools.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  )
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
 
@@ -73,9 +66,10 @@ export default function Home() {
   return (
     <>
       <div className='container mx-auto p-8 bg-slate-950 text-white'>
-        {/* Search */}
         <div className='relative mb-5'>
           <Input
+            isClearable
+            onClear={() => setSearchTerm('')}
             radius='lg'
             classNames={{
               label: 'text-black/50 dark:text-white/90',
@@ -106,7 +100,6 @@ export default function Home() {
             }
           />
         </div>
-        {/* Card */}
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3'>
           {currentItems.map((school) => (
             <Card
@@ -130,7 +123,6 @@ export default function Home() {
             </Card>
           ))}
         </div>
-        {/* Pagination */}
         <div className='fixed bottom-4 left-1/2 transform -translate-x-1/2 mt-4'>
           <Pagination
             showControls
