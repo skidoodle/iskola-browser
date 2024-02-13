@@ -34,7 +34,7 @@ const fetcher = (url: string) =>
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [currentPage, setCurrentPage] = useState<number>(1)
-  const itemsPerPage = 12
+  const itemsPerPage = 21
   const { data: schools, isValidating } = useSWR<School[]>('/api/list', fetcher)
 
   const filteredSchools = useMemo(() => {
@@ -116,7 +116,7 @@ export default function Home() {
             >
               <CardHeader>
                 <h2 className='text-md font-bold mt-5'>
-                  {truncate(school.name, 140)}
+                  {truncate(school.name, 100)}
                 </h2>
               </CardHeader>
               <CardFooter>
@@ -142,6 +142,7 @@ export default function Home() {
             size='lg'
           />
         </div>
+        <div className='mt-10' />
       </div>
     </>
   )
