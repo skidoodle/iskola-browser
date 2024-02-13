@@ -4,6 +4,9 @@ export async function GET(_req: Request, _res: Response) {
   const APIURL = `${process.env.APIURL}`
   try {
     const response = await axios.get(APIURL, {
+      method: 'GET',
+      responseType: 'json',
+      responseEncoding: 'utf8',
       headers: {
         apiKey: process.env.APIKEY,
       },
