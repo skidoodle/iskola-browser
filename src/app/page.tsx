@@ -128,13 +128,15 @@ export default function Home() {
           <div className='mt-10' />
           <div className='fixed bottom-5 left-1/2 transform -translate-x-1/2'>
             <Pagination
-              showControls
-              isCompact
+              loop={true}
+              isCompact={true}
+              showControls={true}
               total={totalPages}
               initialPage={1}
+              siblings={0}
               page={currentPage}
               onChange={paginate}
-              size='sm'
+              size='md'
             />
           </div>
         </div>
