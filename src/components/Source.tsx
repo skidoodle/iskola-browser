@@ -1,12 +1,12 @@
 import { Button } from '@nextui-org/button'
 import { VscGithubInverted } from 'react-icons/vsc'
 
-export const Footer = () => {
+export const Source = () => {
   return (
-    <div className='relative bottom-5 pl-8 w-fit'>
+    <div className='absolute top-0 right-4 p-8'>
       <Button
         aria-label='Source Code'
-        size='sm'
+        size='lg'
         radius='lg'
         onClick={() =>
           window.open('https://github.com/skidoodle/iskola-browser')
