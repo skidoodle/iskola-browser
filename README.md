@@ -29,4 +29,4 @@ Nyisd meg a böngészőt és látogass el a http://localhost:3000 címre.
 Kérjük, olvass el a [hozzájárulási útmutatót](.github/CONTRIBUTING.md) a részletekért, hogyan járulhatsz hozzá a projekthez.
 
 ## Licensz
-Ez a projekt a [AGPL-3.0](https://github.com/skidoodle/iskola-browser?tab=AGPL-3.0-1-ov-file) licensz alatt áll.
+Ez a projekt a [AGPL-3.0](LICENSE) licensz alatt áll.
