@@ -69,7 +69,7 @@ export default function Home() {
   return (
     <>
       <div className='container mx-auto p-8 bg-slate-950 text-white/90 flex-grow'>
-        <div className='relative mb-5 w-fit flex items-center'>
+        <div className='relative mb-5 w-56 flex items-center'>
           <Input
             isClearable
             onClear={() => setSearchTerm('')}
@@ -130,15 +130,15 @@ export default function Home() {
         </div>
         <div className='fixed bottom-5 left-1/2 transform -translate-x-1/2'>
           <Pagination
-            loop={true}
-            isCompact={true}
             showControls={true}
+            loop={true}
             total={totalPages}
             initialPage={1}
             siblings={0}
             page={currentPage}
             onChange={paginate}
-            size='md'
+            size='lg'
+            radius='lg'
           />
         </div>
         <div className='mt-10' />

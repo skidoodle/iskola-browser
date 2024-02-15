@@ -18,6 +18,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang='hu' className='bg-slate-950 dark'>
+      <meta
+        name='viewport'
+        content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'
+      ></meta>
       <body className={inter.className}>
         <Providers>{children}</Providers>
       </body>
