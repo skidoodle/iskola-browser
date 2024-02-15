@@ -25,7 +25,7 @@ Köszönjük, hogy hozzá szeretnél járulni a projekt fejlesztéséhez! Az al�
     git push origin feature/<új-funkció>
     ```
 
-6. Küldj egy Pull Requestet a fő repositoryba. Kérjük, töltsd ki a Pull Request sablont.
+6. Küldj egy Pull Requestet a fő repositoryba. Kérjük, töltsd ki a [Pull Request sablont](PULL_REQUEST_TEMPLATE.md).
 
 ## Fejlesztési Irányelvek
 
