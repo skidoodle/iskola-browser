@@ -68,7 +68,7 @@ export default function Home() {
 
   return (
     <>
-      <div className='container mx-auto p-8 bg-slate-950 text-white/90 flex-grow'>
+      <div className='container mx-auto p-8 bg-slate-950 text-white/90 flex-grow relative'>
         <div className='relative mb-5 w-56 flex items-center'>
           <Input
             isClearable

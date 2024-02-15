@@ -3,7 +3,7 @@ import { VscGithubInverted } from 'react-icons/vsc'
 
 export const Source = () => {
   return (
-    <div className='absolute top-0 right-4 p-8'>
+    <div className='absolute top-0 right-0 p-8'>
       <Button
         aria-label='Source Code'
         size='lg'
