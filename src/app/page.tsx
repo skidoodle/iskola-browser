@@ -17,12 +17,12 @@ import { fetcher } from '@/utils/fetcher'
 import { removeAccents } from '@/utils/normalize'
 import { Source } from '@/components/Source'
 import { Config } from '@/utils/config'
-import type { School } from '@/utils/interface'
+import type { CsvData } from '@/utils/interface'
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [currentPage, setCurrentPage] = useState<number>(1)
-  const { data: schools, isValidating } = useSWR<School[]>(Config.api, fetcher)
+  const { data: schools, isValidating } = useSWR<CsvData[]>(Config.api, fetcher)
 
   const normalize = (value: string) => removeAccents(value.toLowerCase())
 
@@ -32,9 +32,11 @@ export default function Home() {
     const nSearchTerm = normalize(searchTerm)
 
     return schools.filter((school) => {
-      const nSchoolName = normalize(school.name)
-      const nCity = normalize(school.city)
-      const nInstituteCode = normalize(school.instituteCode)
+      const nSchoolName = normalize(school['intézmény neve (székhely)'] || '')
+      const nCity = normalize(
+        school['intézmény címe település (székhely)'] || ''
+      )
+      const nInstituteCode = normalize(school['intézmény OM kódja'] || '')
 
       return (
         nSchoolName.includes(nSearchTerm) ||
@@ -108,22 +110,30 @@ export default function Home() {
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3'>
           {currentItems.map((school) => (
             <Card
-              key={school.instituteCode}
+              key={school['intézmény OM kódja']}
               shadow='lg'
               className='p-3 h-[200px] relative md:w-full lg:w-full transition duration-300 transform hover:scale-[102%] bg-slate-800/40'
             >
               <CardHeader>
                 <h2 className='text-md font-bold mt-5'>
-                  {truncate(school.name, 100)}
+                  {truncate(school['intézmény neve (székhely)'], 100)}
                 </h2>
               </CardHeader>
               <CardFooter>
-                <p className='text-xs mb-2 fixed bottom-10'>{school.city}</p>
-                <Link href={school.url} target='_blank'>
+                <p className='text-xs mb-2 fixed bottom-10'>
+                  {school['intézmény címe település (székhely)']}
+                </p>
+                {school.url ? (
+                  <Link href={school.url} target='_blank'>
+                    <p className='text-sm underline fixed bottom-5'>
+                      {school['intézmény OM kódja']}
+                    </p>
+                  </Link>
+                ) : (
                   <p className='text-sm underline fixed bottom-5'>
-                    {school.instituteCode}
+                    {school['intézmény OM kódja']}
                   </p>
-                </Link>
+                )}
               </CardFooter>
             </Card>
           ))}
