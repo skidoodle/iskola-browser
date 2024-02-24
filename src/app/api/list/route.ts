@@ -6,18 +6,17 @@ import * as x from 'xlsx'
 type SchoolData = Record<string, string>
 
 export async function GET(_req: NextRequest, _res: NextResponse) {
-  const APIURL = 'https://kifir2.kir.hu/TTJegyzekKereso/Home/TeljesListaXlsx'
   const normalizeKey = (value: string): string =>
     removeAccents(value.toLowerCase())
 
   try {
-    const response = await axios.get<ArrayBuffer>(APIURL, {
-      method: 'GET',
-      responseType: 'arraybuffer',
-      headers: {
-        apiKey: process.env.APIKEY,
-      },
-    })
+    const response = await axios.get<ArrayBuffer>(
+      'https://kifir2.kir.hu/TTJegyzekKereso/Home/TeljesListaXlsx',
+      {
+        method: 'GET',
+        responseType: 'arraybuffer',
+      }
+    )
 
     const workbook = x.read(new Uint8Array(response.data))
 
