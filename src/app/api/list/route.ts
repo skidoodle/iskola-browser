@@ -37,7 +37,7 @@ export async function GET(_req: NextRequest, _res: NextResponse) {
       jsonData as Array<Array<string | number>>
 
     if (!header || !Array.isArray(dataRows)) {
-      return { json: { error: 'Invalid data structure' }, status: 500 }
+      return Response.json({ error: 'Invalid data' }, { status: 500 })
     }
 
     const parsedData: SchoolData[] = dataRows.map(
