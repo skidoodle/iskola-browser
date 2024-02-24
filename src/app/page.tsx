@@ -1,76 +1,74 @@
 'use client'
 
-import { useEffect, useState, useMemo } from 'react'
-import {
-  Pagination,
-  Spinner,
-  Input,
-  Card,
-  CardHeader,
-  CardFooter,
-} from '@nextui-org/react'
-import useSWR from 'swr'
-import Link from 'next/link'
-import { SearchIcon } from '@/components/SearchIcon'
-import { truncate } from '@/utils/truncate'
-import { fetcher } from '@/utils/fetcher'
-import { removeAccents } from '@/utils/normalize'
-import { Source } from '@/components/Source'
-import { Config } from '@/utils/config'
-import type { CsvData } from '@/utils/interface'
+// import { useEffect, useState, useMemo } from 'react'
+// import {
+//   Pagination,
+//   Spinner,
+//   Input,
+//   Card,
+//   CardHeader,
+//   CardFooter,
+// } from '@nextui-org/react'
+// import useSWR from 'swr'
+// import Link from 'next/link'
+// import { SearchIcon } from '@/components/SearchIcon'
+// import { truncate } from '@/utils/truncate'
+// import { fetcher } from '@/utils/fetcher'
+// import { removeAccents } from '@/utils/normalize'
+// import { Source } from '@/components/Source'
+// import { Config } from '@/utils/config'
+//import type { School } from '@/utils/interface'
 
 export default function Home() {
-  const [searchTerm, setSearchTerm] = useState<string>('')
-  const [currentPage, setCurrentPage] = useState<number>(1)
-  const { data: schools, isValidating } = useSWR<CsvData[]>(Config.api, fetcher)
+  // const [searchTerm, setSearchTerm] = useState<string>('')
+  // const [currentPage, setCurrentPage] = useState<number>(1)
+  // const { data: schools, isValidating } = useSWR<School[]>(Config.api, fetcher)
 
-  const normalize = (value: string) => removeAccents(value.toLowerCase())
+  // const normalize = (value: string) => removeAccents(value.toLowerCase())
 
-  const filteredSchools = useMemo(() => {
-    if (!schools) return []
+  // const filteredSchools = useMemo(() => {
+  //   if (!schools) return []
 
-    const nSearchTerm = normalize(searchTerm)
+  //   const nSearchTerm = normalize(searchTerm)
 
-    return schools.filter((school) => {
-      const nSchoolName = normalize(school['intézmény neve (székhely)'] || '')
-      const nCity = normalize(
-        school['intézmény címe település (székhely)'] || ''
-      )
-      const nInstituteCode = normalize(school['intézmény OM kódja'] || '')
+  //   return schools.filter((school) => {
+  //     const nSchoolName = normalize(school.name)
+  //     const nCity = normalize(school.city)
+  //     const nInstituteCode = normalize(school.instituteCode)
 
-      return (
-        nSchoolName.includes(nSearchTerm) ||
-        nCity.includes(nSearchTerm) ||
-        nInstituteCode.includes(nSearchTerm)
-      )
-    })
-  }, [searchTerm, schools])
+  //     return (
+  //       nSchoolName.includes(nSearchTerm) ||
+  //       nCity.includes(nSearchTerm) ||
+  //       nInstituteCode.includes(nSearchTerm)
+  //     )
+  //   })
+  // }, [searchTerm, schools])
 
-  const totalPages = Math.ceil(filteredSchools.length / Config.itemsPerPage)
+  // const totalPages = Math.ceil(filteredSchools.length / Config.itemsPerPage)
 
-  useEffect(() => {
-    if (totalPages > 0 && currentPage > totalPages) {
-      setCurrentPage(totalPages)
-    }
-  }, [totalPages, currentPage])
+  // useEffect(() => {
+  //   if (totalPages > 0 && currentPage > totalPages) {
+  //     setCurrentPage(totalPages)
+  //   }
+  // }, [totalPages, currentPage])
 
-  const currentItems = filteredSchools.slice(
-    (currentPage - 1) * Config.itemsPerPage,
-    currentPage * Config.itemsPerPage
-  )
+  // const currentItems = filteredSchools.slice(
+  //   (currentPage - 1) * Config.itemsPerPage,
+  //   currentPage * Config.itemsPerPage
+  // )
 
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
+  // const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
 
-  if (!schools || isValidating)
-    return (
-      <div className='flex items-center justify-center h-screen'>
-        <Spinner size='lg' />
-      </div>
-    )
+  // if (!schools || isValidating)
+  //   return (
+  //     <div className='flex items-center justify-center h-screen'>
+  //       <Spinner size='lg' />
+  //     </div>
+  //   )
 
   return (
     <>
-      <div className='container mx-auto p-8 bg-slate-950 text-white/90 flex-grow relative'>
+      {/* <div className='container mx-auto p-8 bg-slate-950 text-white/90 flex-grow relative'>
         <div className='relative mb-5 w-56 flex items-center'>
           <Input
             isClearable
@@ -110,30 +108,22 @@ export default function Home() {
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3'>
           {currentItems.map((school) => (
             <Card
-              key={school['intézmény OM kódja']}
+              key={school.instituteCode}
               shadow='lg'
               className='p-3 h-[200px] relative md:w-full lg:w-full transition duration-300 transform hover:scale-[102%] bg-slate-800/40'
             >
               <CardHeader>
                 <h2 className='text-md font-bold mt-5'>
-                  {truncate(school['intézmény neve (székhely)'], 100)}
+                  {truncate(school.name, 100)}
                 </h2>
               </CardHeader>
               <CardFooter>
-                <p className='text-xs mb-2 fixed bottom-10'>
-                  {school['intézmény címe település (székhely)']}
-                </p>
-                {school.url ? (
-                  <Link href={school.url} target='_blank'>
-                    <p className='text-sm underline fixed bottom-5'>
-                      {school['intézmény OM kódja']}
-                    </p>
-                  </Link>
-                ) : (
+                <p className='text-xs mb-2 fixed bottom-10'>{school.city}</p>
+                <Link href={school.url} target='_blank'>
                   <p className='text-sm underline fixed bottom-5'>
-                    {school['intézmény OM kódja']}
+                    {school.instituteCode}
                   </p>
-                )}
+                </Link>
               </CardFooter>
             </Card>
           ))}
@@ -152,7 +142,7 @@ export default function Home() {
           />
         </div>
         <div className='mt-10' />
-      </div>
+      </div> */}
     </>
   )
 }
