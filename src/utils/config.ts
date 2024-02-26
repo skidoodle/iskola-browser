@@ -1,4 +1,5 @@
 export enum Config {
   API = '/api/list',
-  ITEMS_PER_PAGE = 21,
+  CARD_COUNT = 21,
+  ITEM_COUNT = 500,
 }

@@ -31,21 +31,32 @@ export default function Home() {
 
   const normalize = (value: string) => removeAccents(value.toLowerCase())
 
+  const includesSearchTerm = (value: string, searchTerm: string): boolean => {
+    const normalizedValue = removeAccents(value.toLowerCase())
+    const normalizedSearchTerm = removeAccents(searchTerm.toLowerCase())
+    return normalizedValue.includes(normalizedSearchTerm)
+  }
+
   const filteredSchools = useMemo(() => {
     if (!schools) return []
 
     const nSearchTerm = normalize(searchTerm)
 
     return schools.filter((school) => {
-      const schoolProperties = Object.values(school)
-        .map((value) => String(value))
-        .map(normalize)
+      const filterableProperties: (keyof ISchool)[] = [
+        'intezmeny_neve_szekhely',
+        'intezmeny_varmegye_szekhely',
+        'intezmeny_om_kodja',
+      ]
 
-      return schoolProperties.some((property) => property.includes(nSearchTerm))
+      return filterableProperties.some((property) =>
+        includesSearchTerm(school[property], nSearchTerm)
+      )
     })
   }, [searchTerm, schools])
 
-  const totalPages = Math.ceil(filteredSchools.length / Config.ITEMS_PER_PAGE)
+  // Calculate total pages based on the original unfiltered schools
+  const totalPages = Math.ceil(schools.length / Config.CARD_COUNT)
 
   useEffect(() => {
     if (totalPages > 0 && currentPage > totalPages) {
@@ -54,8 +65,8 @@ export default function Home() {
   }, [totalPages, currentPage])
 
   const currentItems = filteredSchools.slice(
-    (currentPage - 1) * Config.ITEMS_PER_PAGE,
-    currentPage * Config.ITEMS_PER_PAGE
+    (currentPage - 1) * Config.CARD_COUNT,
+    currentPage * Config.CARD_COUNT
   )
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
@@ -107,7 +118,7 @@ export default function Home() {
           />
         </div>
         <Source />
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3'>
+        <div className='grid grid-cols-1 gap-3'>
           {currentItems.map((school) => (
             <Card
               key={school.intezmeny_om_kodja}

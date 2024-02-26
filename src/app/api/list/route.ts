@@ -62,14 +62,14 @@ export async function GET(req: NextRequest, _res: NextResponse) {
       lastUpdated = now
     }
 
-    const totalPages = Math.ceil(cachedData.length / Config.ITEMS_PER_PAGE)
+    const totalPages = Math.ceil(cachedData.length / Config.ITEM_COUNT)
 
     if (requestedPage > totalPages) {
       return Response.json({ error: 'Invalid page' }, { status: 400 })
     }
 
-    const startIndex = (requestedPage - 1) * Config.ITEMS_PER_PAGE
-    const endIndex = startIndex + Config.ITEMS_PER_PAGE
+    const startIndex = (requestedPage - 1) * Config.ITEM_COUNT
+    const endIndex = startIndex + Config.ITEM_COUNT
 
     const pageData = cachedData.slice(startIndex, endIndex)
 
