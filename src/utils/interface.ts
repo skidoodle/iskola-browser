@@ -1,12 +1,12 @@
 export interface ISchool {
   intezmeny_om_kodja: string
-  intezmeny_neve__szekhely_: string
-  intezmeny_varmegye__szekhely__: string
-  intezmeny_cime_irsz__szekhely_: string
-  intezmeny_cime_telepules__szekhely_: string
-  intezmeny_cime_kozterulet__szekhely_: string
-  intezmeny_cime_kozterulet_jellege__szekhely_: string
-  intezmeny_cime_hsz__szekhely_: string
+  intezmeny_neve_szekhely: string
+  intezmeny_varmegye_szekhely: string
+  intezmeny_cime_irsz_szekhely: string
+  intezmeny_cime_telepules_szekhely: string
+  intezmeny_cime_kozterulet_szekhely: string
+  intezmeny_cime_kozterulet_jellege_szekhely: string
+  intezmeny_cime_hsz_szekhely: string
   feladatellatasi_hely_neve: string
   feladatelltatasi_hely_varmegye: string
   feladatellatasi_hely_cime_irsz: string

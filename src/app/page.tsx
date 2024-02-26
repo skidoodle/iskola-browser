@@ -23,7 +23,7 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [currentPage, setCurrentPage] = useState<number>(1)
   const { data: response, isValidating } = useSWR<{ data: ISchool[] }>(
-    Config.API,
+    Config.API + `?page=${currentPage}`,
     fetcher
   )
 
@@ -45,7 +45,7 @@ export default function Home() {
     })
   }, [searchTerm, schools])
 
-  const totalPages = Math.ceil(filteredSchools.length / Config.BOX_PER_PAGE)
+  const totalPages = Math.ceil(filteredSchools.length / Config.ITEMS_PER_PAGE)
 
   useEffect(() => {
     if (totalPages > 0 && currentPage > totalPages) {
@@ -54,8 +54,8 @@ export default function Home() {
   }, [totalPages, currentPage])
 
   const currentItems = filteredSchools.slice(
-    (currentPage - 1) * Config.BOX_PER_PAGE,
-    currentPage * Config.BOX_PER_PAGE
+    (currentPage - 1) * Config.ITEMS_PER_PAGE,
+    currentPage * Config.ITEMS_PER_PAGE
   )
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
@@ -116,12 +116,12 @@ export default function Home() {
             >
               <CardHeader>
                 <h2 className='text-md font-bold mt-5'>
-                  {truncate(school.intezmeny_neve__szekhely_, 100)}
+                  {truncate(school.intezmeny_neve_szekhely, 100)}
                 </h2>
               </CardHeader>
               <CardFooter>
                 <p className='text-xs mb-2 fixed bottom-10'>
-                  {school.intezmeny_cime_telepules__szekhely_}
+                  {school.intezmeny_cime_telepules_szekhely}
                 </p>
                 <Link href={'/'} target='_blank'>
                   <p className='text-sm underline fixed bottom-5'>
