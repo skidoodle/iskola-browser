@@ -1,4 +1,5 @@
 export enum Config {
-  itemsPerPage = 21,
-  api = '/api/list',
+  BOX_PER_PAGE = 21,
+  API = '/api/list',
+  ITEMS_PER_PAGE = 500,
 }

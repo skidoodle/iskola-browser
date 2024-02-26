@@ -3,5 +3,6 @@ export const removeAccents = (str: string) => {
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/ /g, '_')
-    .replace(/[()]/g, '')
+    .replace(/[()]/g, '_')
+    .replace(/\//g, '_')
 }

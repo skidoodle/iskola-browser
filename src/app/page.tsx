@@ -1,74 +1,76 @@
 'use client'
 
-// import { useEffect, useState, useMemo } from 'react'
-// import {
-//   Pagination,
-//   Spinner,
-//   Input,
-//   Card,
-//   CardHeader,
-//   CardFooter,
-// } from '@nextui-org/react'
-// import useSWR from 'swr'
-// import Link from 'next/link'
-// import { SearchIcon } from '@/components/SearchIcon'
-// import { truncate } from '@/utils/truncate'
-// import { fetcher } from '@/utils/fetcher'
-// import { removeAccents } from '@/utils/normalize'
-// import { Source } from '@/components/Source'
-// import { Config } from '@/utils/config'
-//import type { School } from '@/utils/interface'
+import { useEffect, useState, useMemo } from 'react'
+import {
+  Pagination,
+  Spinner,
+  Input,
+  Card,
+  CardHeader,
+  CardFooter,
+} from '@nextui-org/react'
+import useSWR from 'swr'
+import Link from 'next/link'
+import { SearchIcon } from '@/components/SearchIcon'
+import { truncate } from '@/utils/truncate'
+import { fetcher } from '@/utils/fetcher'
+import { removeAccents } from '@/utils/normalize'
+import { Source } from '@/components/Source'
+import { Config } from '@/utils/config'
+import type { ISchool } from '@/utils/interface'
 
 export default function Home() {
-  // const [searchTerm, setSearchTerm] = useState<string>('')
-  // const [currentPage, setCurrentPage] = useState<number>(1)
-  // const { data: schools, isValidating } = useSWR<School[]>(Config.api, fetcher)
+  const [searchTerm, setSearchTerm] = useState<string>('')
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const { data: response, isValidating } = useSWR<{ data: ISchool[] }>(
+    Config.API,
+    fetcher
+  )
 
-  // const normalize = (value: string) => removeAccents(value.toLowerCase())
+  const schools = response?.data ?? []
 
-  // const filteredSchools = useMemo(() => {
-  //   if (!schools) return []
+  const normalize = (value: string) => removeAccents(value.toLowerCase())
 
-  //   const nSearchTerm = normalize(searchTerm)
+  const filteredSchools = useMemo(() => {
+    if (!schools) return []
 
-  //   return schools.filter((school) => {
-  //     const nSchoolName = normalize(school.name)
-  //     const nCity = normalize(school.city)
-  //     const nInstituteCode = normalize(school.instituteCode)
+    const nSearchTerm = normalize(searchTerm)
 
-  //     return (
-  //       nSchoolName.includes(nSearchTerm) ||
-  //       nCity.includes(nSearchTerm) ||
-  //       nInstituteCode.includes(nSearchTerm)
-  //     )
-  //   })
-  // }, [searchTerm, schools])
+    return schools.filter((school) => {
+      const schoolProperties = Object.values(school)
+        .map((value) => String(value))
+        .map(normalize)
 
-  // const totalPages = Math.ceil(filteredSchools.length / Config.itemsPerPage)
+      return schoolProperties.some((property) => property.includes(nSearchTerm))
+    })
+  }, [searchTerm, schools])
 
-  // useEffect(() => {
-  //   if (totalPages > 0 && currentPage > totalPages) {
-  //     setCurrentPage(totalPages)
-  //   }
-  // }, [totalPages, currentPage])
+  const totalPages = Math.ceil(filteredSchools.length / Config.BOX_PER_PAGE)
 
-  // const currentItems = filteredSchools.slice(
-  //   (currentPage - 1) * Config.itemsPerPage,
-  //   currentPage * Config.itemsPerPage
-  // )
+  useEffect(() => {
+    if (totalPages > 0 && currentPage > totalPages) {
+      setCurrentPage(totalPages)
+    }
+  }, [totalPages, currentPage])
 
-  // const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
+  const currentItems = filteredSchools.slice(
+    (currentPage - 1) * Config.BOX_PER_PAGE,
+    currentPage * Config.BOX_PER_PAGE
+  )
 
-  // if (!schools || isValidating)
-  //   return (
-  //     <div className='flex items-center justify-center h-screen'>
-  //       <Spinner size='lg' />
-  //     </div>
-  //   )
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
+
+  if (!response || isValidating) {
+    return (
+      <div className='flex items-center justify-center h-screen'>
+        <Spinner size='lg' />
+      </div>
+    )
+  }
 
   return (
     <>
-      {/* <div className='container mx-auto p-8 bg-slate-950 text-white/90 flex-grow relative'>
+      <div className='container mx-auto p-8 bg-slate-950 text-white/90 flex-grow relative'>
         <div className='relative mb-5 w-56 flex items-center'>
           <Input
             isClearable
@@ -108,20 +110,22 @@ export default function Home() {
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3'>
           {currentItems.map((school) => (
             <Card
-              key={school.instituteCode}
+              key={school.intezmeny_om_kodja}
               shadow='lg'
               className='p-3 h-[200px] relative md:w-full lg:w-full transition duration-300 transform hover:scale-[102%] bg-slate-800/40'
             >
               <CardHeader>
                 <h2 className='text-md font-bold mt-5'>
-                  {truncate(school.name, 100)}
+                  {truncate(school.intezmeny_neve__szekhely_, 100)}
                 </h2>
               </CardHeader>
               <CardFooter>
-                <p className='text-xs mb-2 fixed bottom-10'>{school.city}</p>
-                <Link href={school.url} target='_blank'>
+                <p className='text-xs mb-2 fixed bottom-10'>
+                  {school.intezmeny_cime_telepules__szekhely_}
+                </p>
+                <Link href={'/'} target='_blank'>
                   <p className='text-sm underline fixed bottom-5'>
-                    {school.instituteCode}
+                    {school.intezmeny_om_kodja}
                   </p>
                 </Link>
               </CardFooter>
@@ -142,7 +146,7 @@ export default function Home() {
           />
         </div>
         <div className='mt-10' />
-      </div> */}
+      </div>
     </>
   )
 }

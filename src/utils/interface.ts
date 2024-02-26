@@ -1,1 +1,36 @@
-//TODO export interface School {}
+export interface ISchool {
+  intezmeny_om_kodja: string
+  intezmeny_neve__szekhely_: string
+  intezmeny_varmegye__szekhely__: string
+  intezmeny_cime_irsz__szekhely_: string
+  intezmeny_cime_telepules__szekhely_: string
+  intezmeny_cime_kozterulet__szekhely_: string
+  intezmeny_cime_kozterulet_jellege__szekhely_: string
+  intezmeny_cime_hsz__szekhely_: string
+  feladatellatasi_hely_neve: string
+  feladatelltatasi_hely_varmegye: string
+  feladatellatasi_hely_cime_irsz: string
+  feladatellatasi_hely_cime_telepules: string
+  feladatellatasi_hely_cime_kozterulet: string
+  feladatellatasi_hely_cime_kozterulet_jellege: string
+  feladatellatasi_hely_cime_sz: string
+  tanulmanyi_terulet_kodja: string
+  tanulmanyi_terulet_szovege: string
+  tanulmanyi_terulet_kepzesi_tipusa: string
+  '6_evfolyamos_gimnazium_8_evfolyamos_gimanizum_9_evfolymra_beiskolazas': string
+  evfolyamok_szama: string
+  oktatas_sajatos_jellemzoi: string
+  sni: string
+  elso_idegen_nyelv: string
+  masodik_idegen_nyelv: string
+  a_felvetel_elbiralasanak_szabalyai: string
+  a_felveteli_elbiralas_tovabbi_szempontjai: string
+  az_intezmeny_egyedi_megjegyzese: string
+  fenntarto_tipusa: string
+  fenntarto_neve: string
+  fenntarto_cime_irsz: string
+  fenntarto_cime_telepules: string
+  fenntarto_cime_kozterulet: string
+  fenntarto_cime_kozterulet_jellege: string
+  fenntarto_cime_hsz: string
+}
